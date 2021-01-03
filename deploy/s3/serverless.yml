@@ -1,0 +1,46 @@
+service: example-lambda-at-edge-s3
+
+provider:
+  name: aws
+  stage: ${opt:stage}
+  region: us-east-1
+
+resources:
+  Resources:
+    S3:
+      Type: AWS::S3::Bucket
+    OriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: Example
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: S3
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS:
+                  Fn::Join:
+                    - ' '
+                    - - 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity'
+                      - Ref: OriginAccessIdentity
+              Action:
+                - 's3:GetObject'
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Ref: S3
+                    - '/*'
+  Outputs:
+    OriginAccessIdentity:
+      Value:
+        Ref: OriginAccessIdentity
+    S3:
+      Value:
+        Ref: S3

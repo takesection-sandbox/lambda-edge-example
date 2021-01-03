@@ -1,0 +1,68 @@
+service: example-lambda-at-edge
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  role: LambdaRole
+  stage: ${opt:stage}
+  region: us-east-1
+
+package:
+  individually: true
+
+functions:
+  edge:
+    handler: index.handler
+    events:
+      - cloudFront:
+          eventType: viewer-request
+          behavior:
+            ViewerProtocolPolicy: https-only
+            AllowedMethods:
+              - 'GET'
+              - 'HEAD'
+            CachedMethods:
+              - 'GET'
+              - 'HEAD'
+          origin:
+            DomainName: ${cf:example-lambda-at-edge-s3-${opt:stage}.S3}.s3.amazonaws.com
+            S3OriginConfig:
+              OriginAccessIdentity: origin-access-identity/cloudfront/${cf:example-lambda-at-edge-s3-${opt:stage}.OriginAccessIdentity}
+
+    package:
+      artifact: "../../modules/edge/edge.zip"
+
+resources:
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: example-lambda-at-edge-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - edgelambda.amazonaws.com
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        Policies:
+          - PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:GetObject
+                  Resource: '*'
+            PolicyName: policy-for-lambda-${opt:stage}
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          DefaultRootObject: index.html
+          HttpVersion: http2
