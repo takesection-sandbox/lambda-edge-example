@@ -28,6 +28,7 @@ functions:
             DomainName: ${cf:example-lambda-at-edge-s3-${opt:stage}.S3}.s3.amazonaws.com
             S3OriginConfig:
               OriginAccessIdentity: origin-access-identity/cloudfront/${cf:example-lambda-at-edge-s3-${opt:stage}.OriginAccessIdentity}
+    timeout: 5
 
     package:
       artifact: "../../modules/edge/edge.zip"

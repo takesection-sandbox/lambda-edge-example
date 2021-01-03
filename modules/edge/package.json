@@ -1,0 +1,20 @@
+{
+  "name": "edge",
+  "version": "1.0.0",
+  "description": "Example Lambda@Edge application in Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-aws-resource": "pack-zip"
+  },
+  "author": "Shigeki Shoji",
+  "license": "MIT",
+  "devDependencies": {
+    "@tsconfig/node12": "^1.0.7",
+    "pack-zip": "^0.2.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.820.0",
+    "jose": "^3.5.0"
+  }
+}
