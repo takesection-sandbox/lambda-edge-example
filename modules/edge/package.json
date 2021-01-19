@@ -12,11 +12,11 @@
   "devDependencies": {
     "@tsconfig/node12": "^1.0.7",
     "@types/node": "^14.14.20",
-    "@types/node-jose": "^1.1.5",
     "pack-zip": "^0.2.2"
   },
   "dependencies": {
     "aws-sdk": "^2.820.0",
-    "node-jose": "^2.0.0"
+    "jose": "^3.5.2",
+    "lodash": "^4.17.20"
   }
 }

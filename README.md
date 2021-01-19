@@ -10,14 +10,16 @@ Source: https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/images/cloudfront-eve
 
 ```
 $ (cd deploy/s3; sls deploy -s <STAGE> -v)
-$ (cd modules/edge; npm i)
-$ (cd modules/edge; node genkeypair.js)
+```
+
+```
+$ (cd modules/genkeypair; npm i; tsc; BUCKET_NAME=<YOUR KEY BUCKET NAME> node src/genkeypair.js)
 ```
 
 # Build
 
 ```
-$ (cd modules/edge; npm run build-aws-resource)
+$ (cd modules/edge; npm i; tsc; npm run build-aws-resource)
 ```
 
 # Deploy
@@ -39,7 +41,3 @@ $ (cd deploy/edge; sls deploy -s <STAGE> -v)
 7. Cookie の JWT を公開鍵 (public key) で検証
 8. S3 のコンテンツの取得
 9. S3 のコンテンツがブラウザに返される
-
-# TODO
-
-* [@tsconfig/node12](https://www.npmjs.com/package/@tsconfig/node12)
