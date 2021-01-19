@@ -3,12 +3,25 @@ service: example-lambda-at-edge-s3
 provider:
   name: aws
   stage: ${opt:stage}
-  region: us-east-1
+  region: ap-northeast-1
+  lambdaHashingVersion: 20201221
 
 resources:
   Resources:
     S3:
       Type: AWS::S3::Bucket
+      Properties:
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+    KeysBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
     OriginAccessIdentity:
       Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
       Properties:
@@ -44,3 +57,6 @@ resources:
     S3:
       Value:
         Ref: S3
+    KeysBucket:
+      Value:
+        Ref: KeysBucket
