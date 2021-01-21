@@ -1,19 +1,15 @@
 import {JwtFunctions} from "./src/jwt";
 import {environment} from './environment';
+import {v4} from "uuid";
 
 class Controller {
     private jwtFunctions: JwtFunctions;
     private bucketName: string;
-    private keyId: string;
 
     constructor() {
         this.jwtFunctions = new JwtFunctions();
         this.bucketName = environment.BUCKET_NAME;
-        this.keyId = environment.KEY_ID;
-        console.log(this.jwtFunctions);
         console.log(environment);
-        console.log(this.bucketName);
-        console.log(this.keyId);
     }
 
     public async handle(event: any, context: any) {
@@ -47,10 +43,9 @@ class Controller {
         console.log(request);
         console.log(process.env);
         console.log(this.bucketName);
-        console.log(this.keyId);
 
         const maxAge = 60 * 10; // 10 min.
-        const jwt: string = await this.jwtFunctions.sign({'sessionId': 'abcdefg'}, this.bucketName, this.keyId);
+        const jwt: string = await this.jwtFunctions.sign({'sessionId': v4()}, this.bucketName);
         const response = {
             status: '302',
             statusDescription: 'Found',

@@ -20,10 +20,16 @@ s3.putObject({
     }
     console.log(data);
 });
+
+const key: object = {
+    'kid': uuid,
+    'privateKey': privateKey.export({ type: 'pkcs8', format: 'pem' })
+}
+
 s3.putObject({
     Bucket: bucketName,
-    Key: uuid + '/id_rsa',
-    Body: privateKey.export({ type: 'pkcs8', format: 'pem' })
+    Key: 'private.json',
+    Body: JSON.stringify(key)
 }, (err, data) => {
     if (err) {
         throw err;

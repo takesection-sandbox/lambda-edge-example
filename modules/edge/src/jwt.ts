@@ -24,29 +24,34 @@ export class JwtFunctions {
         });
     }
 
-    private _getPrivateKey(bucketName: string, keyId: string): Promise<KeyObject> {
+    private _getPrivateKey(bucketName: string): Promise<any> {
         const promise = this.s3.getObject({
             Bucket: bucketName,
-            Key: keyId + '/id_rsa'
+            Key: 'private.json'
         }).promise();
-        return promise.then((data) => {
-            const body = data.Body ? data.Body.toString() : '';
-            return crypto.createPrivateKey(body);
+        return promise.then(async (data) => {
+            const body = JSON.parse(data.Body ? data.Body.toString() : '{}');
+            const keyId = body['kid']
+            const key = await crypto.createPrivateKey(body['privateKey']);
+            return {
+                kid: keyId,
+                privateKey: key
+            }
         });
     }
 
-    public sign(payload: any, bucketName: string, keyId: string): Promise<any> {
-        const jwt = new SignJWT(payload)
-            .setProtectedHeader({
-                alg: 'RS256',
-                kid: keyId
-            })
-            .setIssuedAt()
-            .setIssuer('urn:' + bucketName + ':issuer')
-            .setAudience('urn:' + bucketName + ':audience')
-            .setExpirationTime('5m');
-        return this._getPrivateKey(bucketName, keyId).then((privateKey: KeyObject) => {
-            return jwt.sign(privateKey);
+    public sign(payload: any, bucketName: string): Promise<any> {
+        return this._getPrivateKey(bucketName).then((privateKey) => {
+            const jwt = new SignJWT(payload)
+                .setProtectedHeader({
+                    alg: 'RS256',
+                    kid: privateKey['kid']
+                })
+                .setIssuedAt()
+                .setIssuer('urn:' + bucketName + ':issuer')
+                .setAudience('urn:' + bucketName + ':audience')
+                .setExpirationTime('5m');
+            return jwt.sign(privateKey['privateKey']);
         })
     }
 
