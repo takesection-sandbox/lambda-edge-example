@@ -52,7 +52,7 @@ class Controller {
             headers: {
                 location: [{
                     key: 'Location',
-                    value: 'https://github.com/takesection/lambda-edge-example',
+                    value: request.uri,
                 }],
                 'set-cookie': [{
                     key: 'Set-Cookie',
