@@ -10,6 +10,7 @@ class Controller {
         this.jwtFunctions = new JwtFunctions();
         this.bucketName = environment.BUCKET_NAME;
         console.log(environment);
+        console.log(process.env);
     }
 
     public async handle(event: any, context: any) {

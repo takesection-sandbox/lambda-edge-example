@@ -8,8 +8,14 @@ provider:
   region: us-east-1
   lambdaHashingVersion: 20201221
 
+plugins:
+  - serverless-plugin-typescript
+
 package:
-  individually: true
+  exclude:
+    - node_modules/**
+    - '!node_modules/jose/**'
+    - '!node_modules/uuid/**'
 
 functions:
   edge:
@@ -30,8 +36,6 @@ functions:
             DomainName: ${cf:example-lambda-at-edge-s3-${opt:stage}.S3}.s3.amazonaws.com
             S3OriginConfig:
               OriginAccessIdentity: origin-access-identity/cloudfront/${cf:example-lambda-at-edge-s3-${opt:stage}.OriginAccessIdentity}
-    package:
-      artifact: "../../modules/edge/edge.zip"
 
 resources:
   Resources:

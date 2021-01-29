@@ -19,13 +19,14 @@ $ (cd modules/genkeypair; npm i; tsc; BUCKET_NAME=<YOUR KEY BUCKET NAME> node sr
 # Build
 
 ```
-$ (cd modules/edge; npm i; tsc; npm run build-aws-resource)
+$ (cd modules/edge; sls invoke local --function edge --path ../../test/test.json -s test)
 ```
 
 # Deploy
 
 ```
-$ (cd deploy/edge; sls deploy -s <STAGE> -v)
+$ (cd modules/edge; sls deploy -s <STAGE> -v)
+$ (cd modules/edge; sls invoke --function edge --path ../../test/test.json -s test)
 ```
 
 # Design
