@@ -1,8 +1,8 @@
 import crypto, {KeyObject} from 'crypto';
 import AWS from 'aws-sdk';
 
-const {default: SignJWT} = process.env['IS_LOCAL'] ? require('jose/dist/node/cjs/jwt/sign') : require('jose/jwt/sign');
-const {default: jwtVerify} = process.env['IS_LOCAL'] ? require('jose/dist/node/cjs/jwt/verify') : require('jose/jwt/verify');
+const {default: SignJWT} = require('jose/jwt/sign');
+const {default: jwtVerify} = require('jose/jwt/verify');
 
 export class JwtFunctions {
 

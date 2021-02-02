@@ -9,7 +9,7 @@ provider:
   lambdaHashingVersion: 20201221
 
 plugins:
-  - serverless-plugin-typescript
+  - serverless-webpack
 
 package:
   exclude:
