@@ -1,9 +1,17 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
+const webpack = require('webpack');
+
+console.log(slsw.lib.serverless['configurationInput']['custom']['bucketName']);
 
 module.exports = {
     mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
     entry: slsw.lib.entries,
+    plugins: [
+        new webpack.DefinePlugin({
+            BUCKET_NAME: JSON.stringify(slsw.lib.serverless['configurationInput']['custom']['bucketName'])
+        })
+    ],
     resolve: {
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     },

@@ -1,6 +1,7 @@
 import {JwtFunctions} from "./src/jwt";
-import {environment} from './environment';
 import {v4} from "uuid";
+
+declare const BUCKET_NAME: string;
 
 class Controller {
     private jwtFunctions: JwtFunctions;
@@ -8,8 +9,7 @@ class Controller {
 
     constructor() {
         this.jwtFunctions = new JwtFunctions();
-        this.bucketName = environment.BUCKET_NAME;
-        console.log(environment);
+        this.bucketName = BUCKET_NAME;
         console.log(process.env);
     }
 
